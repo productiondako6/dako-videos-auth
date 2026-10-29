@@ -1,8 +1,6 @@
 import NextAuth from "next-auth"
 import "next-auth/jwt"
-
 import Apple from "next-auth/providers/apple"
-// import Atlassian from "next-auth/providers/atlassian"
 import Auth0 from "next-auth/providers/auth0"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import BankIDNorway from "next-auth/providers/bankid-no"
@@ -54,7 +52,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: UnstorageAdapter(storage),
   providers: [
     Apple,
-    // Atlassian,
     Auth0,
     AzureB2C,
     BankIDNorway,
@@ -65,7 +62,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
     Cognito,
     Coinbase,
-    Discord,
+    Discord({
+      clientId: process.env.DISCORD_CLIENT_ID,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET,
+    }),
     Dropbox,
     Facebook,
     GitHub,
@@ -117,7 +117,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
       if (token?.accessToken) session.accessToken = token.accessToken
-
       return session
     },
   },
